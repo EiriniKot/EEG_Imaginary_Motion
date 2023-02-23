@@ -57,7 +57,8 @@ if train:
                  network=network,
                  optimizer=opt,
                  epochs=100,
-                 loss_fn=torch.nn.CrossEntropyLoss())
+                 loss_fn=torch.nn.CrossEntropyLoss(),
+                 device= torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
 
 
 

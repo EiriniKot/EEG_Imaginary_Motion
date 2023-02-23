@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader, ConcatDataset
 def dataset_loaders(paths: list,
                     batch_size: int = 10,
                     shuffle: bool = True,
-                    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')):
+                    ):
     test_sets = []
     train_sets = []
     valid_sets = []
@@ -19,27 +19,29 @@ def dataset_loaders(paths: list,
             valid_sets.append(torch.load(path))
 
     train_set = ConcatDataset(train_sets)
-    train_set_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle).to(device)
-    test_set = ConcatDataset(test_sets).to(device)
-    test_set_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle).to(device)
-    valid_set = ConcatDataset(valid_sets).to(device)
-    valid_set_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=shuffle).to(device)
+    train_set_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
+    test_set = ConcatDataset(test_sets)
+    test_set_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
+    valid_set = ConcatDataset(valid_sets)
+    valid_set_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=shuffle)
 
     return {'train_set_loader': train_set_loader,
             'test_set_loader': test_set_loader,
             'valid_set_loader': valid_set_loader}
 
 
-def run_train_nn(datasets_loaders:dict, network, optimizer, epochs, loss_fn):
+def run_train_nn(datasets_loaders:dict, network, optimizer, epochs, loss_fn, device):
     for ep in range(epochs):
         t_loss, v_loss, v_acc, t_acc = train_one_epoch(datasets_loaders['train_set_loader'],
                                          datasets_loaders['valid_set_loader'],
-                                         optimizer, network, loss_fn, print_step=10)
+                                         optimizer, network, loss_fn, print_step=10,
+                                         device = device)
         print(f'Epoch number {ep} ---> train loss: {round(t_loss,4)}  train accuracy: {t_acc} val loss: {round(v_loss,4)} val accuracy: {v_acc}')
         print('\n')
 
 
-def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, print_step=10):
+def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, print_step=10,
+                    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')):
     running_loss = 0.
     last_loss = 0.
     tr_acc = 0.
@@ -47,7 +49,12 @@ def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, pr
 
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
+
         inputs, labels = data
+
+        inputs.to(device)
+        labels.to(device)
+
         optimizer.zero_grad()
         outputs = network(inputs)
         # Compute the loss and its gradients

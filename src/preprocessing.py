@@ -78,7 +78,7 @@ def apply_cwt(sets_path, save=True):
 
             input_x.append(torch.from_numpy(cwt_all_channels_stacked))
             input_y.append(label)
-        print('build final')
+
         final = torch.stack(input_x)
         label = torch.stack(input_y)
 
