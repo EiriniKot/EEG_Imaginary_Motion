@@ -106,12 +106,6 @@ def split_ttv(sets_path, folder = 'torch_split', train=0.7, val=0.15):
         train_X = shuffled_X[:n_train_s]
         train_y = shuffled_y[:n_train_s]
 
-        val_X = shuffled_X[n_train_s:n_train_s+n_valid_s]
-        val_y = shuffled_y[n_train_s:n_train_s+n_valid_s]
-
-        test_X = shuffled_X[n_train_s+n_valid_s:]
-        test_y = shuffled_y[n_train_s+n_valid_s:]
-
         out = set.split('_')[-1]
 
         train_X = torch.cat(train_X, 0)
@@ -120,17 +114,29 @@ def split_ttv(sets_path, folder = 'torch_split', train=0.7, val=0.15):
         dataset_torch = torch.utils.data.TensorDataset(train_X, train_y)
         torch.save(dataset_torch, f'{folder}/dataset_split_train_{out}')
 
+        del dataset_torch, train_X, train_y
+
+        val_X = shuffled_X[n_train_s:n_train_s + n_valid_s]
+        val_y = shuffled_y[n_train_s:n_train_s + n_valid_s]
+
         val_X = torch.cat(val_X, 0)
         val_y = torch.cat(val_y, 0)
 
         dataset_torch = torch.utils.data.TensorDataset(val_X, val_y)
         torch.save(dataset_torch, f'{folder}/dataset_split_val_{out}')
 
+        del val_X, val_y, dataset_torch
+
+        test_X = shuffled_X[n_train_s + n_valid_s:]
+        test_y = shuffled_y[n_train_s + n_valid_s:]
+
         test_X = torch.cat(test_X, 0)
         test_y = torch.cat(test_y, 0)
 
         dataset_torch = torch.utils.data.TensorDataset(test_X, test_y)
         torch.save(dataset_torch, f'{folder}/dataset_split_test_{out}')
+
+        del test_X, test_y, dataset_torch
 
 
 
