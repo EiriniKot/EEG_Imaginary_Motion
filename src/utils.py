@@ -31,7 +31,7 @@ def run_train_nn(datasets_loaders:dict, network, optimizer, epochs, loss_fn):
     for ep in range(epochs):
         t_loss, v_loss, v_acc, t_acc = train_one_epoch(datasets_loaders['train_set_loader'],
                                          datasets_loaders['valid_set_loader'],
-                                         optimizer, network, loss_fn)
+                                         optimizer, network, loss_fn, print_step=10)
         print(f'Epoch number {ep} ---> train loss: {round(t_loss,4)}  train accuracy: {t_acc} val loss: {round(v_loss,4)} val accuracy: {v_acc}')
         print('\n')
 
@@ -59,8 +59,8 @@ def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, pr
         # Gather data and report
         running_loss += loss.item()
         if i % print_step == print_step-1:
-            last_loss = float(running_loss / 100)  # loss per batch
-            print(f'Per 100 steps batch {i + 1} loss: {round(last_loss,4)}')
+            last_loss = float(running_loss / print_step)  # loss per batch
+            print(f'Per {print_step} steps batch {i + 1} loss: {round(last_loss,4)}')
             running_loss = 0.
     tr_acc = float(tr_acc / len(training_loader))
 

@@ -89,7 +89,7 @@ def apply_ctw(sets_path, save=True):
             torch.save(dataset_torch, f'torch_cwt/dataset_cwt_{out}')
 
 
-def split_ttv(sets_path, train=0.7, val=0.15):
+def split_ttv(sets_path, folder = 'torch_split', train=0.7, val=0.15):
     for set in sets_path:
         torch_set = torch.load(set)
         iterator = torch.utils.data.DataLoader(torch_set, batch_size=1, shuffle=True)
@@ -118,19 +118,19 @@ def split_ttv(sets_path, train=0.7, val=0.15):
         train_y = torch.cat(train_y, 0)
 
         dataset_torch = torch.utils.data.TensorDataset(train_X, train_y)
-        torch.save(dataset_torch, f'torch_split/dataset_split_train_{out}')
+        torch.save(dataset_torch, f'{folder}/dataset_split_train_{out}')
 
         val_X = torch.cat(val_X, 0)
         val_y = torch.cat(val_y, 0)
 
         dataset_torch = torch.utils.data.TensorDataset(val_X, val_y)
-        torch.save(dataset_torch, f'torch_split/dataset_split_val_{out}')
+        torch.save(dataset_torch, f'{folder}/dataset_split_val_{out}')
 
         test_X = torch.cat(test_X, 0)
         test_y = torch.cat(test_y, 0)
 
         dataset_torch = torch.utils.data.TensorDataset(test_X, test_y)
-        torch.save(dataset_torch, f'torch_split/dataset_split_test_{out}')
+        torch.save(dataset_torch, f'{folder}/dataset_split_test_{out}')
 
 
 

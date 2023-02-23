@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import math
 
+
 def conv2d_output_size(input_size, out_channels, padding, kernel_size, stride, dilation=None):
     """According to https://pytorch.org/docs/stable/generated/torch.nn.Conv3d.html
     """
