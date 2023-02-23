@@ -2,7 +2,10 @@ import torch
 from torch.utils.data import DataLoader, ConcatDataset
 
 
-def dataset_loaders(paths: list, batch_size:int = 10, shuffle:bool =True):
+def dataset_loaders(paths: list,
+                    batch_size: int = 10,
+                    shuffle: bool = True,
+                    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')):
     test_sets = []
     train_sets = []
     valid_sets = []
@@ -16,11 +19,11 @@ def dataset_loaders(paths: list, batch_size:int = 10, shuffle:bool =True):
             valid_sets.append(torch.load(path))
 
     train_set = ConcatDataset(train_sets)
-    train_set_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
-    test_set = ConcatDataset(test_sets)
-    test_set_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
-    valid_set = ConcatDataset(valid_sets)
-    valid_set_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=shuffle)
+    train_set_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle).to(device)
+    test_set = ConcatDataset(test_sets).to(device)
+    test_set_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle).to(device)
+    valid_set = ConcatDataset(valid_sets).to(device)
+    valid_set_loader = DataLoader(valid_set, batch_size=batch_size, shuffle=shuffle).to(device)
 
     return {'train_set_loader': train_set_loader,
             'test_set_loader': test_set_loader,
@@ -85,11 +88,3 @@ def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, pr
     # print(f'Validation loss is {round(val_loss, 4)}')
 
     return last_loss, val_loss, val_acc, tr_acc
-
-
-
-
-
-
-
-    # iterator = torch.utils.data.DataLoader(torch_set, batch_size=1, shuffle=True)

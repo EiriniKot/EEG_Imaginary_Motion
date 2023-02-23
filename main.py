@@ -13,6 +13,9 @@ from src.utils import run_train_nn, dataset_loaders
 from src.nn_net import Net
 import torch
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 dataset = '/home/eirini/Documents/biomedical/Imaginary_vis/session2/'
 label_categories = os.listdir(dataset)
 f = open('onehot_info.json')
@@ -47,7 +50,8 @@ if train:
     sets_path = [os.path.join('torch_split', dt) for dt in os.listdir('torch_split')]
     loaders = dataset_loaders(paths=sets_path, batch_size=10, shuffle=True)
 
-    network = Net(c=63, d=51, h=44, outputs=4)
+    network = Net(c=63, d=51, h=44, outputs=4).to(device)
+
     opt = torch.optim.Adam(network.parameters(), lr=0.0005)
     run_train_nn(datasets_loaders=loaders,
                  network=network,
