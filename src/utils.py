@@ -1,5 +1,4 @@
 import torch
-import torchmetrics
 from torch.utils.data import DataLoader, ConcatDataset
 
 
@@ -42,7 +41,6 @@ def train_one_epoch(training_loader, val_loader, optimizer, network, loss_fn, pr
     last_loss = 0.
     tr_acc = 0.
     network.train()
-    accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=4)
 
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
