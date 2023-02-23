@@ -63,7 +63,7 @@ def apply_stft(sets_path,
         return X, y
 
 
-def apply_ctw(sets_path, save=True):
+def apply_cwt(sets_path, save=True):
     for set in sets_path:
         torch_set = torch.load(set)
         input_x = []

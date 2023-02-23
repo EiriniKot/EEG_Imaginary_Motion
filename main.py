@@ -8,7 +8,7 @@ The shape of the array of each .npy file is (69,359).
 """
 
 import os, json
-from src.preprocessing import dataset_to_torch_save, apply_stft, split_ttv, apply_ctw
+from src.preprocessing import dataset_to_torch_save, apply_stft, split_ttv, apply_cwt
 from src.utils import run_train_nn, dataset_loaders
 from src.nn_net import Net
 import torch
@@ -38,7 +38,7 @@ if cwt:
     A CWT performs a convolution with data using the wavelet function, which is
     characterized by a width parameter and length parameter. """
     sets_path = [os.path.join('torch_data', dt) for dt in os.listdir('torch_data')]
-    apply_ctw(sets_path)
+    apply_cwt(sets_path)
 
 split = True
 if split:
