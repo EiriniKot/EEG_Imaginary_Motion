@@ -103,7 +103,6 @@ def split_ttv(sets_path, train=0.7, val=0.15):
             shuffled_X.append(input_s)
             shuffled_y.append(label)
 
-
         train_X = shuffled_X[:n_train_s]
         train_y = shuffled_y[:n_train_s]
 
